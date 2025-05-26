@@ -8,18 +8,19 @@ class DiscordUser(BaseModel):
     username: str
     avatar: typing.Optional[str] = None
     discriminator: str
-    public_flags: int
+    public_flags: typing.Optional[int] = None
 
 class DiscordMember(BaseModel):
     user: DiscordUser
     roles: list[str]
     premium_since: typing.Optional[str] = None
     permissions: str
-    pending: bool
+
+    pending: typing.Optional[bool] = None
     nick: typing.Optional[str] = None
-    mute: bool
+    mute: typing.Optional[bool] = None
     joined_at: str
-    deaf: bool
+    deaf: typing.Optional[bool] = None
 
 class DiscordMessageContent(BaseModel):
     content: str
@@ -31,11 +32,52 @@ class BotMessage(BaseModel):
 class DiscordPing(BaseModel):
     type: typing.Literal[1]
 
-class SlashGreet(BaseModel):
+
+# ----------------------------------------------------------------------
+
+class Options(BaseModel):
+    name: str
+    type: int
+    value: typing.Union[int, float, bool, str, None]
+
+
+class SlashCommand(BaseModel):
     id: str
-    name: typing.Literal["greet"]
+    name: str
     type: typing.Literal[1]
-    options: typing.Optional[list[dict]] = None
+    options: typing.Optional[list[Options]] = None
+
+
+class SlashGreet(SlashCommand):
+    name: typing.Literal["greet"]
+
+
+
+class SlashCalculateTurns(BaseModel):
+
+    name: typing.Literal["calculate"]
+    options: list[Options] = pydantic.Field(min_length=2, max_length=2) # -> receive a json array of exactly 2 in length. This should automatically parse into the appropriate option objects on **kwargs pass, correct?
+
+    @property
+    def cycles(self) -> typing.Optional[int]:
+        if self.options:
+            for i in self.options:
+                if i.name == "cycles":
+                    return typing.cast(int, i.value)
+        else:
+            return None
+
+
+    @property
+    def speed(self) -> typing.Optional[float]:
+        if self.options:
+            for i in self.options:
+                if i.name == "speed":
+                    return typing.cast(float, i.value)
+        else:
+            return None
+
+
 
 class DiscordCommand(BaseModel):
     type: typing.Literal[2, 3, 4, 5]
@@ -48,48 +90,4 @@ class DiscordCommand(BaseModel):
     locale: typing.Optional[str] = None
     member: typing.Optional[DiscordMember] = None
     user: typing.Optional[DiscordUser] = None
-    data: typing.Union[SlashGreet] = pydantic.Field(discriminator="type")
-
-
-
-    """
-    ```
-{
-    "type": 2,
-    "token": "A_UNIQUE_TOKEN",
-    "member": {
-        "user": {
-            "id": "A_USER_ID",
-            "username": "A_USERNAME",
-            "avatar": "GUILD_AVATAR_HASH",
-            "discriminator": "1337",
-            "public_flags": 131141
-        },
-        "roles": ["12345678"],
-        "premium_since": null,
-        "permissions": "2147483647",
-        "pending": false,
-        "nick": null,
-        "mute": false,
-        "joined_at": "2019-04-14T12:14:14.000000+00:00",
-        "is_pending": false,
-        "deaf": false
-    },
-    "id": "INTERACTION_ID",
-    "application_id": "YOUR_APP_ID",
-    "app_permissions": "442368",
-    "guild_id": "A_GUILD_ID",
-    "guild_locale": "en-US",
-    "locale": "en-US",
-    "data": {
-        "options": [{
-            "name": "Igneous",
-            "value": "rock_igneous"
-        }],
-        "name": "rock",
-        "id": "APPLICATION_COMMAND_ID"
-    },
-    "channel_id": "ASSOCIATED_CHANNEL_ID"
-}
-```
-    """
+    data: typing.Union[SlashGreet, SlashCalculateTurns] = pydantic.Field(discriminator="name")

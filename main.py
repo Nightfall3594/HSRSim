@@ -1,4 +1,5 @@
 import pydantic
+import uvicorn
 from fastapi import FastAPI, HTTPException
 from starlette.requests import Request
 from Discord.Commands import *
@@ -27,5 +28,4 @@ async def discord(response: Request): #
         #     raise HTTPException(422, "Unprocessable Entity")
 
         context = DiscordContext(member=json.member)
-
         return json.data.execute(context)

@@ -7,7 +7,7 @@ from Discord.Components import *
 
 
 class SlashCommand(BaseModel):
-    id: str
+    id: typing.Optional[str]
     name: str
     type: typing.Literal[1]
     options: typing.Optional[list[Annotated[Union[Options, SlashCommandGroup.subclasses(), SlashCommand.subclasses()], pydantic.Field(discriminator="type")]]] = None  # if there are options, they could either be other slash commands, or groups, or options objects

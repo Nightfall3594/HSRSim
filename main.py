@@ -28,5 +28,4 @@ async def discord(response: Request): #
         #     raise HTTPException(422, "Unprocessable Entity")
 
         context = DiscordContext(member=json.member)
-
         return json.data.execute(context)

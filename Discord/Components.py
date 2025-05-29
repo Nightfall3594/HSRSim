@@ -34,10 +34,7 @@ class BotMessage(BaseModel):
 
     @classmethod
     def deferred_message(cls, text: str):
-        return cls(type=4, data=DiscordMessageContent(content=text))
-
-
-
+        return cls(type=5, data=DiscordMessageContent(content=text))
 
 class DiscordPing(BaseModel):
     type: typing.Literal[1]

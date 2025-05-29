@@ -6,20 +6,6 @@ from Discord.Commands import Options
 from Discord.Components import *
 
 
-class SlashCommandGroup(BaseModel):
-    id: str
-    name: str
-    type: typing.Literal[2]
-    options: list[SlashCommand.subclasses()]  # it could be any slash command!
-
-    @classmethod
-    def subclasses(cls):
-        if not cls.__subclasses__():
-            return
-        else:
-            return typing.Annotated[typing.Union[*cls.__subclasses__()], pydantic.Field(discriminator="name")]
-
-
 class SlashCommand(BaseModel):
     id: str
     name: str
@@ -33,8 +19,6 @@ class SlashCommand(BaseModel):
             return
         else:
             return typing.Annotated[typing.Union[*cls.__subclasses__()], pydantic.Field(discriminator="name")]
-
-
 
 
 class Greet(SlashCommand):
@@ -79,7 +63,6 @@ class CalculateTurns(SlashCommand):
         return BotMessage.generic_message(f"With a speed of {speed}, over the course of {cycles} cycles, a character would take {turns} turns")
 
 
-
 class SlashCalculate(SlashCommand):
     name: typing.Literal["calculate"]
     type: typing.Literal[1]
@@ -93,6 +76,30 @@ class SlashCalculate(SlashCommand):
 
     def execute(self, context: DiscordContext):
         return self.subcommand.execute(context)
+
+
+
+# WARNING: Class definition order matters here due to Pydantic's discriminator resolution
+# Do not reorder without testing the union types
+class SlashCommandGroup(BaseModel):
+    id: str
+    name: str
+    type: typing.Literal[2]
+    options: list[SlashCommand.subclasses()]  # it could be any slash command!
+
+    @classmethod
+    def subclasses(cls):
+        if not cls.__subclasses__():
+            return
+        else:
+            return typing.Annotated[typing.Union[*cls.__subclasses__()], pydantic.Field(discriminator="name")]
+
+
+
+
+
+
+
 
 
 

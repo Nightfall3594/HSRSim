@@ -1,26 +1,54 @@
+from __future__ import annotations
+from typing import Annotated, Union
 import pydantic
 import typing
 from Discord.Commands import Options
 from Discord.Components import *
 
 
+class SlashCommandGroup(BaseModel):
+    id: str
+    name: str
+    type: typing.Literal[2]
+    options: list[SlashCommand.subclasses()]  # it could be any slash command!
+
+    @classmethod
+    def subclasses(cls):
+        if not cls.__subclasses__():
+            return
+        else:
+            return typing.Annotated[typing.Union[*cls.__subclasses__()], pydantic.Field(discriminator="name")]
+
+
 class SlashCommand(BaseModel):
     id: str
     name: str
     type: typing.Literal[1]
-    options: typing.Optional[list[Options]] = None
+    options: typing.Optional[list[Annotated[Union[Options, SlashCommandGroup.subclasses(), SlashCommand.subclasses()], pydantic.Field(discriminator="type")]]] = None  # if there are options, they could either be other slash commands, or groups, or options objects
+    choices: typing.Optional[list[Options]] = None
+
+    @classmethod
+    def subclasses(cls):
+        if not cls.__subclasses__():
+            return
+        else:
+            return typing.Annotated[typing.Union[*cls.__subclasses__()], pydantic.Field(discriminator="name")]
 
 
-class SlashGreet(SlashCommand):
+
+
+class Greet(SlashCommand):
     name: typing.Literal["greet"]
+    type: typing.Literal[1]
 
     def execute(self, context: DiscordContext):
         return BotMessage.generic_message(f"Hello, {context.member.user.username}. Would you like some cake?")
 
 
-class SlashCalculateTurns(SlashCommand):
-    name: typing.Literal["calculate"]
-    options: list[Options] = pydantic.Field(min_length=2, max_length=2)  # -> receive a json array of exactly 2 in length. This should automatically parse into the appropriate option objects on **kwargs pass, correct?
+class CalculateTurns(SlashCommand):
+    name: typing.Literal["turns"]
+    type: typing.Literal[1]
+    options: list[Options] = pydantic.Field(min_length=2)
 
     @property
     def cycles(self) -> typing.Optional[int]:
@@ -49,3 +77,22 @@ class SlashCalculateTurns(SlashCommand):
         turns = ((100 * cycles) + 50) // (10000/speed)
 
         return BotMessage.generic_message(f"With a speed of {speed}, over the course of {cycles} cycles, a character would take {turns} turns")
+
+
+
+class SlashCalculate(SlashCommand):
+    name: typing.Literal["calculate"]
+    type: typing.Literal[1]
+
+    @property
+    def subcommand(self) -> typing.Optional[SlashCommand.subclasses()]:
+        if self.options:
+            return self.options[0]
+        else:
+            return None
+
+    def execute(self, context: DiscordContext):
+        return self.subcommand.execute(context)
+
+
+

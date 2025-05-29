@@ -1,4 +1,5 @@
 import pydantic
+import uvicorn
 from fastapi import FastAPI, HTTPException
 from starlette.requests import Request
 from Discord.Commands import *

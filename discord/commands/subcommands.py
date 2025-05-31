@@ -1,8 +1,26 @@
 
-from discord.base_classes import SubCommand
-from typing import cast, Literal
+from typing import cast, Literal, Optional
 from discord.components.misc import DiscordContext
 from discord.components.messages import DiscordMessage
+
+from pydantic import  BaseModel
+from discord.types import *
+from discord.components.misc import *
+
+
+class SubCommand(BaseModel):
+    """
+    Subcommand.
+    It must only directly map to options objects.
+    """
+    name: str
+    type: Literal[1]
+    options: Optional[list[Options]]
+    choices: Optional[list[Options]]
+
+    def execute(self, context: DiscordContext) -> DiscordMessage:
+        raise NotImplementedError
+
 
 class CalculateTurns(SubCommand):
 

@@ -2,9 +2,11 @@ from __future__ import annotations
 from typing import Annotated, Union
 from pydantic import Field
 
-from discord.commands import slash_commands, subcommand_group, subcommands
-from discord.base_classes import *
 
+from discord.commands.slash_commands import SlashCommand
+from discord.commands.subcommands import SubCommand
+from discord.commands.subcommand_group import SubCommandGroup
+from discord.components.misc import Options
 
 
 SlashCommandType = Annotated[Union[*SlashCommand.__subclasses__()], Field(discriminator="name")]

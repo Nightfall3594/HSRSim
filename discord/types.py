@@ -1,0 +1,18 @@
+from __future__ import annotations
+from typing import Annotated, Union
+from pydantic import Field
+
+from discord.commands import slash_commands, subcommand_group, subcommands
+from discord.base_classes import *
+
+
+
+SlashCommandType = Annotated[Union[*SlashCommand.__subclasses__()], Field(discriminator="name")]
+
+SubCommandType = Annotated[Union[*SubCommand.__subclasses__()], Field(discriminator="name")]
+
+SubCommandGroupType = Annotated[Union[*SubCommandGroup.__subclasses__()], Field(discriminator="name")]
+
+CompositeOptionType = Annotated[Union[Options, SubCommandType, SubCommandGroupType], Field(discriminator="type")]
+
+SubCommandGroupOption = Annotated[Union[SubCommandType, SubCommandGroupType], Field(discriminator="type")] #  if SubCommand.__subclasses__() and SubCommandGroup.__subclasses__() else None

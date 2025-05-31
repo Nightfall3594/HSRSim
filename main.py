@@ -1,9 +1,10 @@
+from __future__ import  annotations
 import pydantic
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from starlette.requests import Request
-from Discord.Commands import *
-from Discord.SlashCommands import *
+from discord.components.misc import DiscordContext
+from discord.interactions import DiscordCommand
 
 app = FastAPI()
 

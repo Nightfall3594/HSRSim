@@ -3,7 +3,7 @@ import typing
 
 class Options(BaseModel):
     name: str
-    type: int  # this is the dtype of the input. Refer to docs below.
+    type: typing.Literal[3,4,5,10]  # this is the dtype of the input. Refer to docs below.
     value: typing.Union[int, float, bool, str, None]
 
     """

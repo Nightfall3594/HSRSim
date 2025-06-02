@@ -13,7 +13,7 @@ class SubCommand(BaseModel):
 
 
 class TestSub(SubCommand):
-    name: Literal["sampleSubCommand"]
+    name: Literal["sample"]
 
 
-subcommand_subclasses = Annotated[Union[SubCommand.__subclasses__()], Field(discriminator="name")]
+subcommand_subclasses = Annotated[Union[*SubCommand.__subclasses__()], Field(discriminator="name")]

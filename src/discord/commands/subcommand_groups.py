@@ -15,11 +15,15 @@ class SubCommandGroup(BaseModel):
     # UNTESTED BEHAVIOR. Check later if it is deferred properly
     options: list[Union[subcommand_subclasses, subcommand_group_subclasses]]
 
+    @property
+    def subcommand(self):
+        return self.options[0]
+
 
 class SampleSubGroup(SubCommandGroup):
     name: Literal["SampleSubCommand"]
 
 
-subcommand_group_subclasses = Annotated[Union[SubCommandGroup.__subclasses__()], Field(discriminator="name")]
+subcommand_group_subclasses = Annotated[Union[*SubCommandGroup.__subclasses__()], Field(discriminator="name")]
 
 

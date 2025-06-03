@@ -1,12 +1,12 @@
-from typing import Literal, Optional, Annotated, Union
+from typing import Literal, Optional, Annotated, Union, cast
 
 from pydantic import BaseModel, Field
 
 from src.discord.components import DiscordContext
 from src.discord.interactions.discord_message import DiscordMessage
 from src.discord.commands import Options
-from src.discord.commands.subcommands import subcommand_subclasses
-from src.discord.commands.subcommand_groups import subcommand_group_subclasses
+from src.discord.commands.subcommands import *
+from src.discord.commands.subcommand_groups import *
 
 class SlashCommand(BaseModel):
     id: str
@@ -33,11 +33,19 @@ class SlashCommand(BaseModel):
         return self.options[0] if self.options else None
 
 
-class SlashGreet(SlashCommand):
+class Greet(SlashCommand):
     name: Literal["greet"]
 
     def execute(self, context: DiscordContext):
         return DiscordMessage.generic_message(f"Hello, {context.member.user.username}. Would you like some cake?")
+
+
+class Calculate(SlashCommand):
+    name: Literal["calculate"]
+    options: list[Union[CalculateTurns, CalculateAV]]
+
+    def execute(self, context: DiscordContext):
+        return self.subcommand.execute(context)
 
 
 slashcommand_subclasses = Annotated[Union[*SlashCommand.__subclasses__()], Field(discriminator="name")]

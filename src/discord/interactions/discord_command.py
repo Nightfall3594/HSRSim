@@ -16,6 +16,6 @@ class DiscordCommand(BaseModel):
     locale: typing.Optional[str] = None
     member: typing.Optional[DiscordMember] = None
     user: typing.Optional[DiscordUser] = None
-    data: slashcommand_subclasses = Field(discriminator="name")  # always must be slash command
+    data: slashcommand_subclasses  # always must be slash command
     channel_id: typing.Optional[str] = None
     version: typing.Optional[int] = None

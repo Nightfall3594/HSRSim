@@ -1,17 +1,28 @@
-from typing import Literal, Optional, Union, Annotated, cast
+import typing
+from typing import *
 
+import typing_extensions
 from pydantic import BaseModel, Field
 
 from src.discord.commands import Options
 from src.discord.components import DiscordContext
 from src.discord.interactions.discord_message import DiscordMessage
 
+T = typing.TypeVar('T')
+
 class SubCommand(BaseModel):
     name: str
     type: Literal[1]
 
-    # WIP: This must contain either options object or nothing.
     options: Optional[list[Options]] = None
+
+    def _get(self, attribute: str, dtype: Type[T]) -> Optional[T]:
+        if self.options:
+            for i in self.options:
+                if i.name == attribute:
+                    return cast(dtype, i.value)
+
+        return None
 
 
 class CalculateTurns(SubCommand):
@@ -19,18 +30,12 @@ class CalculateTurns(SubCommand):
 
     @property
     def speed(self):
-        if self.options:
-            for i in self.options:
-                if i.name == "speed":
-                    return cast(float, i.value)
+        return self._get("speed", float)
 
 
     @property
     def cycles(self):
-        if self.options:
-            for i in self.options:
-                if i.name == "cycles":
-                    return cast(int, i.value)
+        return self._get("cycles", int)
 
 
     def execute(self, context: DiscordContext):

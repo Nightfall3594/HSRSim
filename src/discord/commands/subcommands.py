@@ -52,6 +52,21 @@ class CalculateAV(SubCommand):
 
     name: Literal["av"]
 
+    @property
+    def speed(self):
+        return self._get("speed", float)
+
+    @property
+    def action_advance(self):
+        return self._get("action_advance", float)
+
+    def execute(self, context: DiscordContext):
+
+        action_gauge = (10000 * (1-self.action_advance))
+        action_value = (action_gauge/self.speed)
+
+        return DiscordMessage.generic_message(f"A character with a speed of {self.speed} and a {self.action_advance * 100}% action advance has an AV of {action_value}")
+
 
 
 

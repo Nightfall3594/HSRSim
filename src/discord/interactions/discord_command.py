@@ -1,8 +1,8 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 import typing
-import pydantic
-from Discord.Components import *
-from Discord.SlashCommands import SlashCommand
+
+from src.discord.components import DiscordMember, DiscordUser
+from src.discord.commands.slashcommands import slashcommand_subclasses
 
 
 class DiscordCommand(BaseModel):
@@ -16,6 +16,6 @@ class DiscordCommand(BaseModel):
     locale: typing.Optional[str] = None
     member: typing.Optional[DiscordMember] = None
     user: typing.Optional[DiscordUser] = None
-    data: typing.Union[SlashCommand.subclasses()] = pydantic.Field(discriminator="name")  # all top level commands are of type 1
+    data: slashcommand_subclasses  # always must be slash command
     channel_id: typing.Optional[str] = None
     version: typing.Optional[int] = None

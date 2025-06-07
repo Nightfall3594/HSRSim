@@ -43,7 +43,7 @@ class CalculateTurns(SubCommand):
         speed = self.speed
         cycles = self.cycles
 
-        turns = ((100*cycles + 50)/ (10000/speed))
+        turns = ((100*cycles + 50) // (10000/speed))
         return DiscordMessage.generic_message(f"With a speed of {speed}, over the course of {cycles} cycle(s), a character would take {turns} turns")
 
 

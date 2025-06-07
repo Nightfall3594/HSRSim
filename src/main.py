@@ -24,15 +24,11 @@ async def discord(response: Request): #
         return {"type": 1}
 
     else:
-        # try:
-        json = DiscordCommand(**json)
+        try:
+            json = DiscordCommand(**json)
 
-        # except pydantic.ValidationError as e:
-        #     raise HTTPException(422, "Unprocessable Entity")
+        except pydantic.ValidationError as e:
+            raise HTTPException(422, "Unprocessable Entity")
 
         context = DiscordContext(member=json.member)
         return json.data.execute(context)
-
-
-if __name__ == '__main__':
-    uvicorn.run(app=app, host="localhost", port=8181)

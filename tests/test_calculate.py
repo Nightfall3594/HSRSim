@@ -14,6 +14,14 @@ def ctx():
     return mock_context
 
 
+def test_greet(ctx):
+
+    command = Greet(id="818181", name="greet", type=1, options=[])
+    expected_message = f"Hello, {ctx.member.user.username}. Would you like some cake?"
+
+    assert command.execute(ctx) == DiscordMessage.generic_message(expected_message)
+
+
 def test_CalculateTurns(ctx):
 
     spd = Options(name="speed", type=10, value=134)

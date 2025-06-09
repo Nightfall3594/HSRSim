@@ -1,5 +1,7 @@
-from pydantic import BaseModel
 import typing
+
+from pydantic import BaseModel
+
 from src.discord.components.discord_user import DiscordUser
 
 class DiscordMember(BaseModel):

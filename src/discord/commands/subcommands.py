@@ -1,11 +1,14 @@
 import typing
 from typing import *
 
-import typing_extensions
+import enka.errors
 from pydantic import BaseModel, Field
+from enka import HSRClient
 
 from src.discord.commands import Options
 from src.discord.components import DiscordContext
+from src.discord.components.message_components import StringSelectOption
+from src.discord.interactions.component_message import BuildMessage
 from src.discord.interactions.discord_message import DiscordMessage
 
 T = typing.TypeVar('T')
@@ -66,6 +69,30 @@ class CalculateAV(SubCommand):
         action_value = (action_gauge/self.speed)
 
         return DiscordMessage.generic_message(f"A character with a speed of {self.speed} and a {self.action_advance * 100}% action advance has an AV of {action_value}")
+
+
+class ShowBuild(SubCommand):
+    name: Literal["build"]
+
+    async def execute(self, context: DiscordContext):
+
+        async with HSRClient() as client:
+            try:
+                response = await client.fetch_showcase(self.options[0].value)
+            except enka.errors.RateLimitedError:
+                return DiscordMessage.generic_message("Mmm, looks like you're hitting rate limits. How about you try again a few minutes from now?")
+
+        if not response.characters:
+            return DiscordMessage.generic_message("No characters found. Are you sure they are public?")
+
+        char_list = []
+        for character in response.characters:
+            char_list.append(
+                StringSelectOption(label=character.name, value=character.name)
+                )
+
+        return BuildMessage.string_select(options=char_list)
+
 
 
 

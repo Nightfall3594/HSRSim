@@ -4,6 +4,7 @@ import pytest
 
 from src.discord.commands.slashcommands import *
 from src.discord.components import DiscordContext, DiscordMember, DiscordUser
+from src.discord.components.message_components import StringSelectOption
 from src.discord.interactions import DiscordMessage
 
 @pytest.fixture
@@ -45,3 +46,15 @@ def test_CalculateAV(ctx):
 
     expected_output = f"A character with a speed of 160 and a 20.0% action advance has an AV of 50.0"
     assert command.execute(ctx) == DiscordMessage.generic_message(expected_output)
+
+@pytest.mark.asyncio
+async def test_ShowBuild(ctx):
+
+    uid = Options(name="uid", type=3, value="805629555")
+    subcommand = ShowBuild(name="build", type=1, options=[uid])
+    command = SlashShow(id = "81818181" ,name="show", type=1, options=[subcommand])
+
+    chars = [StringSelectOption(label="Ruan Mei", value="Ruan Mei")]
+    expected_output = BuildMessage.string_select(chars)
+
+    assert await command.execute(ctx) == expected_output

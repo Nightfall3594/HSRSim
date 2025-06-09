@@ -15,6 +15,7 @@ class MessageComponent(BaseComponent):
 
 class ContainerComponent(BaseComponent):
     type: Literal[17]
+    accent_color: Optional[int]
     components: list[component_subclasses]
 
 

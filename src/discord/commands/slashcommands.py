@@ -48,7 +48,7 @@ class SlashCommand(BaseModel):
 class Greet(SlashCommand):
     name: Literal["greet"]
 
-    def execute(self, context: DiscordContext):
+    async def execute(self, context: DiscordContext):
         return DiscordMessage.generic_message(f"Hello, {context.member.user.username}. Would you like some cake?")
 
 
@@ -56,15 +56,15 @@ class Calculate(SlashCommand):
     name: Literal["calculate"]
     options: list[Union[CalculateTurns, CalculateAV]]
 
-    def execute(self, context: DiscordContext):
-        return self.subcommand.execute(context)
+    async def execute(self, context: DiscordContext):
+        return await self.subcommand.execute(context)
 
 
 class SlashShow(SlashCommand):
     name: Literal["show"]
     options: list[ShowBuild]
 
-    def execute(self, context: DiscordContext):
-        return self.subcommand.execute(context)
+    async def execute(self, context: DiscordContext):
+        return await self.subcommand.execute(context)
 
 slashcommand_subclasses = Annotated[Union[*SlashCommand.__subclasses__()], Field(discriminator="name")]

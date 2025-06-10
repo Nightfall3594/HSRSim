@@ -60,4 +60,11 @@ class Calculate(SlashCommand):
         return self.subcommand.execute(context)
 
 
+class SlashShow(SlashCommand):
+    name: Literal["show"]
+    options: list[ShowBuild]
+
+    def execute(self, context: DiscordContext):
+        return self.subcommand.execute(context)
+
 slashcommand_subclasses = Annotated[Union[*SlashCommand.__subclasses__()], Field(discriminator="name")]

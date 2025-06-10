@@ -72,7 +72,7 @@ class CalculateAV(SubCommand):
 
 
 class ShowBuild(SubCommand):
-    name: Literal["build"]
+    name: Literal["builds"]
 
     async def execute(self, context: DiscordContext):
 

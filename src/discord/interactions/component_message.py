@@ -31,7 +31,8 @@ class BuildMessage(ComponentMessage):
         """
         str_select = StringSelectComponent(type=3, options=options, placeholder="Select a character", custom_id=custom_id)
         action_row = ActionRowComponent(type=1, components=[str_select])
-        return cls(components=[action_row])
+        data = ComponentMessageData(components=[action_row])
+        return cls(data=data)
 
 
     @classmethod
@@ -75,7 +76,8 @@ class BuildMessage(ComponentMessage):
         stat_message = MessageComponent(type=2, content=stat_text)
 
         container = ContainerComponent(type=17, components=[image, title, divider, stat_message], accent_color=9323909)
-        final_message = cls(components=[container])
+        data = ComponentMessageData(components=[container])
+        final_message = cls(data=data)
 
         return final_message
 

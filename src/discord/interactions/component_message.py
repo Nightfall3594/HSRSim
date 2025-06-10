@@ -64,18 +64,22 @@ class BuildMessage(ComponentMessage):
 
         url = {'url': character.icon.card}
         image = MediaComponent(type=10, media=url)
+        image_row = ActionRowComponent(type=1, components=[image])
 
         title = MessageComponent(type=2, content=f"{character.name}")
+        title_row = ActionRowComponent(type=1, components=[title])
 
         divider = MessageComponent(type=2, content=f"~                                                                            ~")
+        divider_row = ActionRowComponent(type=1, components=[divider])
 
-        stats = [f"{stat_emojis[stat.name]}: {stat.formatted_value}\n\n" for stat in character.stats.values()]
         stat_text = ""
-        for stat in stats:
-            stat_text = stat_text+stat
+        for stat in character.stats.values():
+            if stat.value != 0:
+                stat_text =stat_text+f"{stat_emojis[stat.name]} {stat.name}: {stat.formatted_value}\n\n"
         stat_message = MessageComponent(type=2, content=stat_text)
+        stat_row = ActionRowComponent(type=1, components=[stat_message])
 
-        container = ContainerComponent(type=17, components=[image, title, divider, stat_message], accent_color=9323909)
+        container = ContainerComponent(type=17, components=[image_row, title_row, divider_row, stat_row], accent_color=9323909)
         data = ComponentMessageData(components=[container])
         final_message = cls(data=data)
 

@@ -11,7 +11,7 @@ class ComponentMessage(BaseModel):
     This is for a specific discord message type that uses components like buttons,
     and is different from your conventional discord message with embeds.
     """
-    flags: Literal[32678]
+    flags: Optional[int] = None
     components: list[component_subclasses]
 
 
@@ -24,7 +24,7 @@ class BuildMessage(ComponentMessage):
         """
         str_select = StringSelectComponent(type=3, options=options, placeholder="Select a character", custom_id=custom_id)
         action_row = ActionRowComponent(type=1, components=[str_select])
-        return cls(flags=32678, components=[action_row])
+        return cls(components=[action_row])
 
 
     @classmethod
@@ -68,7 +68,7 @@ class BuildMessage(ComponentMessage):
         stat_message = MessageComponent(type=2, content=stat_text)
 
         container = ContainerComponent(type=17, components=[image, title, divider, stat_message], accent_color=9323909)
-        final_message = cls(flags=32678, components=[container])
+        final_message = cls(components=[container])
 
         return final_message
 

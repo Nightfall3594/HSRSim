@@ -1,3 +1,4 @@
+from __future__ import annotations
 from typing import Literal, Optional
 
 import enka.models.hsr as hsr
@@ -12,6 +13,11 @@ class ComponentMessage(BaseModel):
     and is different from your conventional discord message with embeds.
     """
     type: Literal[4] = 4
+    data: ComponentMessageData
+
+
+class ComponentMessageData(BaseModel):
+    content: Optional[str] = None
     flags: Optional[int] = None
     components: list[component_subclasses]
 

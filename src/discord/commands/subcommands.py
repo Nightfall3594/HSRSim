@@ -88,10 +88,10 @@ class ShowBuild(SubCommand):
         char_list = []
         for character in response.characters:
             char_list.append(
-                StringSelectOption(label=character.name, value=character.name)
+                StringSelectOption(label=character.name, value=f"{self.options[0].value};{character.name}")
                 )
 
-        return BuildMessage.string_select(options=char_list)
+        return BuildMessage.string_select(options=char_list, custom_id="character_select")
 
 
 

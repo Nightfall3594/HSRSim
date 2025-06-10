@@ -26,13 +26,20 @@ class ActionRowComponent(BaseComponent):
 
 class StringSelectComponent(BaseComponent):
     type: Literal[3]
-    placeholder: Optional[str]
+    placeholder: Optional[str] = None
     options: list[StringSelectOption]
+    custom_id: str
 
 
 class StringSelectOption(BaseModel):
     label: str
     value: str
+
+
+class MediaComponent(BaseComponent):
+    type: Literal[10]
+    media: dict
+    description: Optional[str] = None
 
 
 

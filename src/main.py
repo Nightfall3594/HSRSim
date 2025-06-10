@@ -1,11 +1,13 @@
 from __future__ import  annotations
 
+from typing import Annotated, Union
+
 import pydantic
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from starlette.requests import Request
 
-from src.discord import DiscordContext, DiscordCommand
+from src.discord import DiscordContext, DiscordInteraction
 
 
 app = FastAPI()
@@ -24,11 +26,13 @@ async def discord(response: Request): #
         return {"type": 1}
 
     else:
+
+        adapter = pydantic.TypeAdapter(DiscordInteraction)
         try:
-            json = DiscordCommand(**json)
+            interaction = adapter.validate_python(json)
 
         except pydantic.ValidationError as e:
             raise HTTPException(422, "Unprocessable Entity")
 
-        context = DiscordContext(member=json.member)
-        return json.data.execute(context)
+        context = DiscordContext(member=interaction.member)
+        return interaction.data.execute(context)

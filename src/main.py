@@ -27,6 +27,8 @@ async def discord(response: Request): #
 
     else:
 
+        print(json)
+
         adapter = pydantic.TypeAdapter(DiscordInteraction)
         #try:
         interaction = adapter.validate_python(json)

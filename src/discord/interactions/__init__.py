@@ -1,4 +1,4 @@
-from src.discord.interactions.discord_command import DiscordCommand
-from src.discord.interactions.discord_message import DiscordMessage
+from src.discord.interactions.interaction_types import BaseInteraction
+from src.discord.interactions.interaction_responses import InteractionResponse
 
-__all__ = ['DiscordMessage', 'DiscordCommand']
+__all__ = ['InteractionResponse', 'BaseInteraction']

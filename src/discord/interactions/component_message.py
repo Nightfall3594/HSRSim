@@ -11,6 +11,7 @@ class ComponentMessage(BaseModel):
     This is for a specific discord message type that uses components like buttons,
     and is different from your conventional discord message with embeds.
     """
+    type: Literal[4] = 4
     flags: Optional[int] = None
     components: list[component_subclasses]
 

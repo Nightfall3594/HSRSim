@@ -7,3 +7,4 @@ class DiscordUser(BaseModel):
     avatar: typing.Optional[str] = None
     discriminator: str
     public_flags: typing.Optional[int] = None
+    bot: typing.Optional[bool] = False

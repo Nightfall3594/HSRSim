@@ -41,7 +41,7 @@ class CalculateTurns(SubCommand):
         return self._get("cycles", int)
 
 
-    def execute(self, context: DiscordContext):
+    async def execute(self, context: DiscordContext):
 
         speed = self.speed
         cycles = self.cycles
@@ -63,7 +63,7 @@ class CalculateAV(SubCommand):
     def action_advance(self):
         return self._get("action_advance", float)
 
-    def execute(self, context: DiscordContext):
+    async def execute(self, context: DiscordContext):
 
         action_gauge = (10000 * (1-self.action_advance))
         action_value = (action_gauge/self.speed)
@@ -72,7 +72,7 @@ class CalculateAV(SubCommand):
 
 
 class ShowBuild(SubCommand):
-    name: Literal["build"]
+    name: Literal["builds"]
 
     async def execute(self, context: DiscordContext):
 

@@ -1,3 +1,4 @@
+from __future__ import annotations
 from typing import Literal, Optional
 
 import enka.models.hsr as hsr
@@ -61,8 +62,8 @@ class BuildMessage(ComponentMessage):
 
         divider = MessageComponent(content=f"~                                                                            ~")
 
-        stats = [f"{stat_emojis[stat.name]}: {stat.formatted_value}\n\n" for stat in character.stats.values()]
         stat_text = ""
+
         for stat in stats:
             stat_text = stat_text+stat
         stat_message = MessageComponent(content=stat_text)

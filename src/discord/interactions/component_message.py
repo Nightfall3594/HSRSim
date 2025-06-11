@@ -11,7 +11,7 @@ class ComponentMessage(BaseModel):
     This is for a specific discord message type that uses components like buttons,
     and is different from your conventional discord message with embeds.
     """
-    flags: Literal[32678]
+    flags: Literal[32678] = 32678
     components: list[component_subclasses]
 
 
@@ -22,9 +22,9 @@ class BuildMessage(ComponentMessage):
         """
         Factory method for creating a simple string select layout.
         """
-        str_select = StringSelectComponent(type=3, options=options, placeholder="Select a character", custom_id=custom_id)
-        action_row = ActionRowComponent(type=1, components=[str_select])
-        return cls(flags=32678, components=[action_row])
+        str_select = StringSelectComponent(options=options, placeholder="Select a character", custom_id=custom_id)
+        action_row = ActionRowComponent(components=[str_select])
+        return cls(components=[action_row])
 
 
     @classmethod
@@ -55,20 +55,20 @@ class BuildMessage(ComponentMessage):
         }
 
         url = {'url': character.icon.card}
-        image = MediaComponent(type=10, media=url)
+        image = MediaComponent(media=url)
 
-        title = MessageComponent(type=2, content=f"{character.name}")
+        title = MessageComponent(content=f"{character.name}")
 
-        divider = MessageComponent(type=2, content=f"~                                                                            ~")
+        divider = MessageComponent(content=f"~                                                                            ~")
 
         stats = [f"{stat_emojis[stat.name]}: {stat.formatted_value}\n\n" for stat in character.stats.values()]
         stat_text = ""
         for stat in stats:
             stat_text = stat_text+stat
-        stat_message = MessageComponent(type=2, content=stat_text)
+        stat_message = MessageComponent(content=stat_text)
 
-        container = ContainerComponent(type=17, components=[image, title, divider, stat_message], accent_color=9323909)
-        final_message = cls(flags=32678, components=[container])
+        container = ContainerComponent(components=[image, title, divider, stat_message], accent_color=9323909)
+        final_message = cls(components=[container])
 
         return final_message
 

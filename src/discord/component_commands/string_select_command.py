@@ -6,7 +6,7 @@ from enka import HSRClient
 
 from src.discord.components import DiscordContext
 from src.discord.interactions.component_message import BuildMessage
-from src.discord.interactions.discord_message import *
+from src.discord.interactions.interaction_responses import *
 
 class BaseStringSelectCommand(BaseModel):
 

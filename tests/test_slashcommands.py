@@ -7,7 +7,7 @@ from src.discord.component_commands.string_select_command import CharacterSelect
 from src.discord.components import DiscordContext, DiscordMember, DiscordUser
 from src.discord.components.message_components import StringSelectOption
 from src.discord.interactions import DiscordMessage
-from src.discord.interactions.discord_command import DiscordInteraction, ComponentInteraction
+from src.discord.interactions.interaction_types import DiscordInteraction, ComponentInteraction
 
 
 @pytest.fixture

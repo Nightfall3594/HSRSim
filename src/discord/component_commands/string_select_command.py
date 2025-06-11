@@ -3,6 +3,7 @@ from typing import Union, Optional, Annotated, Literal
 
 from pydantic import BaseModel, Field
 from enka import HSRClient
+import httpx
 
 from src.discord.components import DiscordContext
 from src.discord.interactions.component_message import BuildMessage
@@ -31,12 +32,22 @@ class CharacterSelectCommand(BaseStringSelectCommand):
         return self.values[0].split(';')[1]
 
     async def execute(self, ctx: DiscordContext):
+
+        # defer the response
+        httpx.post(url=f"https://discord.com/api/v10/interactions/{ctx.interaction_id}/{ctx.interaction_token}/callback",
+                   headers={'Content-Type': 'application/json'},
+                   json={'type': 5})
+
         async with HSRClient() as client:
             showcase = await client.fetch_showcase(self.uid)
             if showcase.characters:
                 for char in showcase.characters:
                     if char.name == self.selection:
-                        return BuildMessage.build_showcase(char)
+                        httpx.post(
+                            url=f"https://discord.com/api/v10/interactions/{ctx.interaction_id}/{ctx.interaction_token}/callback",
+                            headers={'Content-Type': 'application/json'},
+                            json=BuildMessage.build_showcase(char).model_dump()
+                        )
 
 
 

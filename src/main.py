@@ -34,5 +34,8 @@ async def discord(response: Request): #
         except pydantic.ValidationError as e:
             raise HTTPException(422, "Unprocessable Entity")
 
-        context = DiscordContext(member=interaction.member)
+        context = DiscordContext(member=interaction.member,
+                                 interaction_token=interaction.token,
+                                 interaction_id=interaction.id)
+
         return interaction.data.execute(context)

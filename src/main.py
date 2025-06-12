@@ -20,6 +20,9 @@ app = FastAPI()
 if not os.environ.get("PUBLIC_KEY"):
     os.environ["PUBLIC_KEY"] = input("Enter the bot public key: ")
 
+if not os.environ.get("APPLICATION_ID"):
+    os.environ["APPLICATION_ID"] = input("Enter the bot ID: ")
+
 
 @app.get('/wake')
 async def wake():

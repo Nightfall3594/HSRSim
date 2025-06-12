@@ -1,5 +1,6 @@
 from __future__ import annotations
 from typing import Union, Optional, Annotated, Literal
+import os
 
 from pydantic import BaseModel, Field
 from enka import HSRClient
@@ -45,12 +46,12 @@ class CharacterSelectCommand(BaseStringSelectCommand):
                     if char.name == self.selection:
 
                         print("DEBUG: Logging endpoint:", flush=True)
-                        print(f"Endpoint: https://discord.com/api/v10/webhooks/1375294904162451507/{ctx.interaction_token}", flush=True)
+                        print(f"Endpoint: https://discord.com/api/v10/webhooks/{os.environ.get('APPLICATION_ID')}/{ctx.interaction_token}", flush=True)
                         print(f"Payload: {BuildMessage.build_showcase(char).model_dump()}", flush=True)
                         print("\n\n\n", flush=True)
 
                         httpx.post(
-                            url=f"https://discord.com/api/v10/webhooks/1375294904162451507/{ctx.interaction_token}",
+                            url=f"https://discord.com/api/v10/webhooks/{os.environ.get('APPLICATION_ID')}/{ctx.interaction_token}",
                             headers={'Content-Type': 'application/json'},
                             json=BuildMessage.build_showcase(char).model_dump()
                         )

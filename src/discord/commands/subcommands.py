@@ -5,6 +5,7 @@ import enka.errors
 from pydantic import BaseModel, Field
 from enka import HSRClient
 import httpx
+import os
 
 from src.discord.commands import Options
 from src.discord.components import DiscordContext
@@ -99,13 +100,13 @@ class ShowBuild(SubCommand):
 
         print("DEBUG-------------------------------------", flush=True)
         print("Endpoint: ", flush=True)
-        print(f"https://discord.com/api/v10/webhooks/1375294904162451507/{ctx.interaction_token}", flush=True)
+        print(f"https://discord.com/api/v10/webhooks/{os.environ.get('APPLICATION_ID')}/{ctx.interaction_token}", flush=True)
         print("\n\n\n", flush=True)
         print("Testcase payload", flush=True)
         print(BuildMessage.string_select(options=char_list, custom_id="character_select").model_dump(), flush=True)
 
         httpx.post(
-            url=f"https://discord.com/api/v10/webhooks/1375294904162451507/{ctx.interaction_token}",
+            url=f"https://discord.com/api/v10/webhooks/{os.environ.get('APPLICATION_ID')}/{ctx.interaction_token}",
             headers={'Content-Type': 'application/json'},
             json=BuildMessage.string_select(options=char_list, custom_id="character_select").model_dump()
         )

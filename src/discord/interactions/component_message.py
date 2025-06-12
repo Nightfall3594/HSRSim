@@ -35,24 +35,24 @@ class BuildMessage(ComponentMessage):
         """
 
         stat_emojis = {
-            "Outgoing Healing Boost": "<:OutgoingHealingBoost:1379781408846778480>",
-            "Wind DMG Boost": "<:WindDMGBoost:1379781382661996564>",
-            "SPD": "<:SPD:1379781362512302173>",
-            "Quantum DMG Boost": "<:QuantumDMGBoost:1379781344284114975>",
-            "Physical DMG Boost": "<:PhysicalDMGBoost:1379781318702796840>",
-            "Lightning DMG Boost": "<:LightningDMGBoost:1379781282132791437>",
-            "Imaginary DMG Boost": "<:ImaginaryDMGBoost:1379781256773894254>",
-            "Ice DMG Boost": "<:IceDMGBoost:1379781230429737040>",
-            "Fire DMG Boost": "<:FireDMGBoost:1379781210850590810>",
-            "HP": "<:HP:1379781167212924959>",
-            "Energy Regeneration Rate": "<:EnergyRegenerationRate:1379781108618625137>",
-            "Effect RES": "<:EffectRES:1379781081137549312>",
-            "Effect Hit Rate": "<:EffectHitRate:1379781061105680587>",
-            "DEF": "<:DEF:1379781034517729441>",
-            "CRIT Rate": "<:CRITRate:1379781014838317147>",
-            "CRIT DMG": "<:CRITDMG:1379780996718919710>",
-            "Break Effect": "<:BreakEffect:1379780979492655185>",
-            "ATK": "<:ATK:1379780949155254325>"
+            "Outgoing Healing Boost": "<:OutgoingHealingBoost:1382674065378246716>",
+            "Wind DMG Boost": "<:WindDMGBoost:1382674074907578379>",
+            "SPD": "<:SPD:1382674190716637235>",
+            "Quantum DMG Boost": "<:QuantumDMGBoost:1382674070054637660>",
+            "Physical DMG Boost": "<:PhysicalDMGBoost:1382674067571871845>",
+            "Lightning DMG Boost": "<:LightningDMGBoost:1382674063188693082>",
+            "Imaginary DMG Boost": "<:ImaginaryDMGBoost:1382674060827426907>",
+            "Ice DMG Boost": "<:IceDMGBoost:1382674058818093096>",
+            "Fire DMG Boost": "<:FireDMGBoost:1382674054024265738>",
+            "HP": "<:HP:1382674056679129188>",
+            "Energy Regeneration Rate": "<:EnergyRegenerationRate:1382674051402829845>",
+            "Effect RES": "<:EffectRES:1382674048471011338>",
+            "Effect Hit Rate": "<:EffectHitRate:1382674046118006856>",
+            "DEF": "<:DEF:1382674044041695262>",
+            "CRIT Rate": "<:CRITRate:1382674042162516018>",
+            "CRIT DMG": "<:CRITDMG:1382674039801122948>",
+            "Break Effect": "<:BreakEffect:1382674037460701205>",
+            "ATK": "<:ATK:1382674033648341154>"
         }
 
         url = {'url': character.icon.card}

@@ -11,7 +11,7 @@ from src.discord.commands import Options
 from src.discord.components import DiscordContext
 from src.discord.components.message_components import StringSelectOption
 from src.discord.interactions.component_message import BuildMessage
-from src.discord.interactions.interaction_responses import InteractionResponse
+from src.discord.interactions.interaction_responses import CallBackResponse, FollowUpResponse
 
 T = typing.TypeVar('T')
 
@@ -49,7 +49,8 @@ class CalculateTurns(SubCommand):
         cycles = self.cycles
 
         turns = ((100*cycles + 50) // (10000/speed))
-        return InteractionResponse.generic_message(f"With a speed of {speed}, over the course of {cycles} cycle(s), a character would take {turns} turns")
+        return CallBackResponse.generic_message(f"With a speed of {speed}, over the course of {cycles} cycle(s), a character would take {turns} turns",
+                                                context.interaction_token)
 
 
 
@@ -70,7 +71,8 @@ class CalculateAV(SubCommand):
         action_gauge = (10000 * (1-self.action_advance))
         action_value = (action_gauge/self.speed)
 
-        return InteractionResponse.generic_message(f"A character with a speed of {self.speed} and a {self.action_advance * 100}% action advance has an AV of {action_value}")
+        return CallBackResponse.generic_message(f"A character with a speed of {self.speed} and a {self.action_advance * 100}% action advance has an AV of {action_value}",
+                                                context.interaction_token)
 
 
 class ShowBuild(SubCommand):
@@ -78,25 +80,23 @@ class ShowBuild(SubCommand):
 
     async def execute(self, ctx: DiscordContext):
 
-        httpx.post(url=f"https://discord.com/api/v10/interactions/{ctx.interaction_id}/{ctx.interaction_token}/callback",
-                   headers={'Content-Type': 'application/json'},
-                   json={'type': 5})
+        CallBackResponse.deferred_message(ctx.interaction_id, ctx.interaction_token)
 
         async with HSRClient() as client:
             try:
                 response = await client.fetch_showcase(self.options[0].value)
             except enka.errors.RateLimitedError:
-                return InteractionResponse.generic_message("Mmm, looks like you're hitting rate limits. How about you try again a few minutes from now?")
+                return CallBackResponse.generic_message("Mmm, looks like you're hitting rate limits. How about you try again a few minutes from now?",
+                                                        ctx.interaction_token)
 
         if not response.characters:
-            return InteractionResponse.generic_message("No characters found. Are you sure they are public?")
+            return CallBackResponse.generic_message("No characters found. Are you sure they are public?",
+                                                    ctx.interaction_token)
 
         char_list = []
         for character in response.characters:
             char_list.append(
-                StringSelectOption(label=character.name, value=f"{self.options[0].value};{character.name}")
-                )
-
+                StringSelectOption(label=character.name, value=f"{self.options[0].value};{character.name}"))
 
         print("DEBUG-------------------------------------", flush=True)
         print("Endpoint: ", flush=True)
@@ -105,12 +105,8 @@ class ShowBuild(SubCommand):
         print("Testcase payload", flush=True)
         print(BuildMessage.string_select(options=char_list, custom_id="character_select").model_dump(), flush=True)
 
-        httpx.post(
-            url=f"https://discord.com/api/v10/webhooks/{os.environ.get('APPLICATION_ID')}/{ctx.interaction_token}",
-            headers={'Content-Type': 'application/json'},
-            json=BuildMessage.string_select(options=char_list, custom_id="character_select").model_dump()
-        )
-
+        FollowUpResponse.send_followup(BuildMessage.string_select(options=char_list, custom_id="character_select"),
+                                       ctx.interaction_token)
 
         return None
 

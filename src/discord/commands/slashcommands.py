@@ -3,7 +3,7 @@ from typing import *
 from pydantic import BaseModel, Field
 
 from src.discord.components import DiscordContext
-from src.discord.interactions.interaction_responses import InteractionResponse
+from src.discord.interactions.interaction_responses import CallBackResponse
 from src.discord.commands import Options
 from src.discord.commands.subcommands import *
 from src.discord.commands.subcommand_groups import *
@@ -49,7 +49,8 @@ class Greet(SlashCommand):
     name: Literal["greet"]
 
     async def execute(self, context: DiscordContext):
-        return InteractionResponse.generic_message(f"Hello, {context.member.user.username}. Would you like some cake?")
+        return CallBackResponse.generic_message(f"Hello, {context.member.user.username}. Would you like some cake?",
+                                                context.interaction_token)
 
 
 class Calculate(SlashCommand):

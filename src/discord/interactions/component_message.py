@@ -9,7 +9,7 @@ from src.discord.components.message_components import *
 
 class ComponentMessage(BaseModel):
     """
-    This is for a specific discord message type that uses components like buttons,
+    This is for a specific discord message type that uses components v2,
     and is different from your conventional discord message with embeds.
     """
     flags: Literal[32768] = 32768

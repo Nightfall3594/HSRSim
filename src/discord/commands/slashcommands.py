@@ -50,6 +50,7 @@ class Greet(SlashCommand):
 
     async def execute(self, context: DiscordContext):
         return CallBackResponse.generic_message(f"Hello, {context.member.user.username}. Would you like some cake?",
+                                                context.interaction_id,
                                                 context.interaction_token)
 
 

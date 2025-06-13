@@ -13,13 +13,13 @@ class CallBackResponse(BaseModel):
     """
 
     @staticmethod
-    def generic_message(message: str, token: str):
+    def generic_message(message: str, interaction_id: str, token: str):
         """
         For sending your generic message responses.
         Bear in mind this uses the callback webhook
         """
         httpx.post(
-            url=f"https://discord.com/api/v10/webhooks/{os.environ.get('APPLICATION_ID')}/{token}/callback",
+            url=f"https://discord.com/api/v10/interactions/{interaction_id}/{token}/callback",
             headers={'Content-Type': 'application/json'},
             json={"type": 4, "data": {"content": message}}
         )

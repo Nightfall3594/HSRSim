@@ -50,6 +50,7 @@ class CalculateTurns(SubCommand):
 
         turns = ((100*cycles + 50) // (10000/speed))
         return CallBackResponse.generic_message(f"With a speed of {speed}, over the course of {cycles} cycle(s), a character would take {turns} turns",
+                                                context.interaction_id,
                                                 context.interaction_token)
 
 
@@ -87,10 +88,12 @@ class ShowBuild(SubCommand):
                 response = await client.fetch_showcase(self.options[0].value)
             except enka.errors.RateLimitedError:
                 return CallBackResponse.generic_message("Mmm, looks like you're hitting rate limits. How about you try again a few minutes from now?",
+                                                        ctx.interaction_id,
                                                         ctx.interaction_token)
 
         if not response.characters:
             return CallBackResponse.generic_message("No characters found. Are you sure they are public?",
+                                                    ctx.interaction_id,
                                                     ctx.interaction_token)
 
         char_list = []

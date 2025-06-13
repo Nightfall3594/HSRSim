@@ -36,9 +36,9 @@ async def discord(request: Request, response: Response): #
     response.headers["User-Agent"] = "DiscordBot (https://meibot.onrender.com)"
     response.headers["Content-Type"] = "application/json"
 
-    PUBLIC_KEY = os.environ.get("PUBLIC_KEY")
+    public_key = os.environ.get("PUBLIC_KEY")
 
-    verifier = VerifyKey(bytes.fromhex(PUBLIC_KEY))
+    verifier = VerifyKey(bytes.fromhex(public_key))
 
     signature = request.headers["X-Signature-Ed25519"]
     timestamp = request.headers["X-Signature-Timestamp"]
@@ -68,4 +68,4 @@ async def discord(request: Request, response: Response): #
                                  interaction_token=interaction.token,
                                  interaction_id=interaction.id)
 
-        return await interaction.data.execute(context)
+        await interaction.data.execute(context)

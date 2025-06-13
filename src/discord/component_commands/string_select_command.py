@@ -17,7 +17,6 @@ class BaseStringSelectCommand(BaseModel):
     values: list[str]
 
 
-
 class CharacterSelectCommand(BaseStringSelectCommand):
     """
     Bear in mind that self.values[0] is in the format {uid;character.name}.
@@ -35,9 +34,7 @@ class CharacterSelectCommand(BaseStringSelectCommand):
     async def execute(self, ctx: DiscordContext):
 
         # defer the response
-        httpx.post(url=f"https://discord.com/api/v10/interactions/{ctx.interaction_id}/{ctx.interaction_token}/callback",
-                   headers={'Content-Type': 'application/json'},
-                   json={'type': 5})
+        CallBackResponse.deferred_message(ctx.interaction_id, ctx.interaction_token)
 
         async with HSRClient() as client:
             showcase = await client.fetch_showcase(self.uid)
@@ -50,11 +47,7 @@ class CharacterSelectCommand(BaseStringSelectCommand):
                         print(f"Payload: {BuildMessage.build_showcase(char).model_dump()}", flush=True)
                         print("\n\n\n", flush=True)
 
-                        httpx.post(
-                            url=f"https://discord.com/api/v10/webhooks/{os.environ.get('APPLICATION_ID')}/{ctx.interaction_token}",
-                            headers={'Content-Type': 'application/json'},
-                            json=BuildMessage.build_showcase(char).model_dump()
-                        )
+                        FollowUpResponse.send_followup(BuildMessage.build_showcase(char), ctx.interaction_token)
 
 
 

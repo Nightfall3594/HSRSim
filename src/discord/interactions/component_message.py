@@ -67,7 +67,7 @@ class BuildMessage(ComponentMessage):
         for stat in character.stats.values():
 
             if stat.value != 0:
-                stat_text = f"{stat_text}{stat_emojis[stat.name]}{stat.name}: {stat.formatted_value}\n\n"
+                stat_text = f"{stat_text}{stat_emojis[stat.name]} {stat.name}: {stat.formatted_value}\n\n"
         stat_message = MessageComponent(content=stat_text)
 
         container = ContainerComponent(components=[image, title, divider, stat_message], accent_color=9323909)

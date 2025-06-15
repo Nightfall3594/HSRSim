@@ -64,10 +64,16 @@ class BuildMessage(ComponentMessage):
 
         stat_text = ""
 
-        for stat in character.stats.values():
-
+        # up to 11, since only the first 11 stats are non-dmg%.
+        for i in range(11):
+            stat = character.stats.values()[i]
             if stat.value != 0:
                 stat_text = f"{stat_text}{stat_emojis[stat.name]} {stat.name}: {stat.formatted_value}\n\n"
+
+        # then add the highest dmg%
+        highest_dmg = character.highest_dmg_bonus_stat
+        stat_text = f"{stat_text}{stat_emojis[highest_dmg.name]} {highest_dmg.name}: {highest_dmg.formatted_value}\n\n"
+
         stat_message = MessageComponent(content=stat_text)
 
         container = ContainerComponent(components=[image, title, divider, stat_message], accent_color=9323909)

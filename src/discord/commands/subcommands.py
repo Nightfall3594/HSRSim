@@ -84,6 +84,7 @@ class ShowBuild(SubCommand):
     async def execute(self, ctx: DiscordContext):
 
         CallBackResponse.deferred_message(ctx.interaction_id, ctx.interaction_token)
+        error_message = None
 
         async with HSRClient() as client:
             try:
@@ -114,17 +115,16 @@ class ShowBuild(SubCommand):
             char_list.append(
                 StringSelectOption(label=character.name, value=f"{self.options[0].value};{character.name}"))
 
+        string_select = BuildMessage.string_select(options=char_list, custom_id="character_select")
+
         print("DEBUG-------------------------------------", flush=True)
         print("Endpoint: ", flush=True)
         print(f"https://discord.com/api/v10/webhooks/{os.environ.get('APPLICATION_ID')}/{ctx.interaction_token}", flush=True)
         print("\n\n\n", flush=True)
         print("Testcase payload", flush=True)
-        print(BuildMessage.string_select(options=char_list, custom_id="character_select").model_dump(), flush=True)
+        print(string_select.model_dump(), flush=True)
 
-        FollowUpResponse.send_followup(BuildMessage.string_select(options=char_list, custom_id="character_select"),
-                                       ctx.interaction_token)
-
-        return None
+        FollowUpResponse.send_followup(string_select, ctx.interaction_token)
 
 
 

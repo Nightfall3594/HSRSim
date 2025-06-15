@@ -1,3 +1,4 @@
+from __future__ import annotations
 from typing import Union, Literal, Optional, Any
 
 from pydantic import BaseModel
@@ -30,4 +31,8 @@ class DiscordMessage(BaseModel):
     author: Optional[DiscordUser] = None
     components: Optional[component_subclasses] = None
     content: dict[Literal["content"], str]
+
+    @classmethod
+    def generic(cls, message: str) -> DiscordMessage:
+        return cls(content={"content": message})
 

@@ -85,6 +85,7 @@ class ShowBuild(SubCommand):
 
         CallBackResponse.deferred_message(ctx.interaction_id, ctx.interaction_token)
         error_message = None
+        response = None
 
         async with HSRClient() as client:
             try:

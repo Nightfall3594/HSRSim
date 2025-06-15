@@ -22,22 +22,12 @@ STAT_EMOJIS = {
 
 
 
-DMG_BONUSES = [ "Outgoing Healing Boost",
+DMG_BONUSES = [
                 "Wind DMG Boost",
-                "SPD",
                 "Quantum DMG Boost",
                 "Physical DMG Boost",
                 "Lightning DMG Boost",
                 "Imaginary DMG Boost",
                 "Ice DMG Boost",
-                "Fire DMG Boost",
-                "HP",
-                "Energy Regeneration Rate",
-                "Effect RES",
-                "Effect Hit Rate",
-                "DEF",
-                "CRIT Rate",
-                "CRIT DMG",
-                "Break Effect",
-                "ATK"
+                "Fire DMG Boost"
             ]

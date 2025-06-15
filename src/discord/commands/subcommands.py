@@ -54,7 +54,6 @@ class CalculateTurns(SubCommand):
                                                 context.interaction_token)
 
 
-
 class CalculateAV(SubCommand):
 
     name: Literal["av"]
@@ -73,6 +72,7 @@ class CalculateAV(SubCommand):
         action_value = (action_gauge/self.speed)
 
         return CallBackResponse.generic_message(f"A character with a speed of {self.speed} and a {self.action_advance * 100}% action advance has an AV of {action_value}",
+                                                context.interaction_id,
                                                 context.interaction_token)
 
 

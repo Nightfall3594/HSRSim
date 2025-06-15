@@ -5,6 +5,7 @@ import enka.models.hsr as hsr
 from pydantic import BaseModel
 
 from src.discord.components.message_components import *
+from src.discord.constants.hsr_builds import STAT_EMOJIS, DMG_BONUSES
 
 
 class ComponentMessage(BaseModel):
@@ -33,28 +34,6 @@ class BuildMessage(ComponentMessage):
         """
         Factory method for the first page of an enka build character.
         """
-
-        stat_emojis = {
-            "Outgoing Healing Boost": "<:OutgoingHealingBoost:1382674065378246716>",
-            "Wind DMG Boost": "<:WindDMGBoost:1382674074907578379>",
-            "SPD": "<:SPD:1382674190716637235>",
-            "Quantum DMG Boost": "<:QuantumDMGBoost:1382674070054637660>",
-            "Physical DMG Boost": "<:PhysicalDMGBoost:1382674067571871845>",
-            "Lightning DMG Boost": "<:LightningDMGBoost:1382674063188693082>",
-            "Imaginary DMG Boost": "<:ImaginaryDMGBoost:1382674060827426907>",
-            "Ice DMG Boost": "<:IceDMGBoost:1382674058818093096>",
-            "Fire DMG Boost": "<:FireDMGBoost:1382674054024265738>",
-            "HP": "<:HP:1382674056679129188>",
-            "Energy Regeneration Rate": "<:EnergyRegenerationRate:1382674051402829845>",
-            "Effect RES": "<:EffectRES:1382674048471011338>",
-            "Effect Hit Rate": "<:EffectHitRate:1382674046118006856>",
-            "DEF": "<:DEF:1382674044041695262>",
-            "CRIT Rate": "<:CRITRate:1382674042162516018>",
-            "CRIT DMG": "<:CRITDMG:1382674039801122948>",
-            "Break Effect": "<:BreakEffect:1382674037460701205>",
-            "ATK": "<:ATK:1382674033648341154>"
-        }
-
         url = {'url': character.icon.card}
         image = MediaComponent.image(url=url)
 
@@ -65,14 +44,16 @@ class BuildMessage(ComponentMessage):
         stat_text = ""
 
         # up to 11, since only the first 11 stats are non-dmg%.
+        # screw it. new solution, make a constants dict.
         for i in range(11):
             stat = list(character.stats.values())[i]
             if stat.value != 0:
-                stat_text = f"{stat_text}{stat_emojis[stat.name]} {stat.name}: {stat.formatted_value}\n\n"
+                stat_text = f"{stat_text}{STAT_EMOJIS[stat.name]} {stat.name}: {stat.formatted_value}\n\n"
 
         # then add the highest dmg%
         highest_dmg = character.highest_dmg_bonus_stat
-        stat_text = f"{stat_text}{stat_emojis[highest_dmg.name]} {highest_dmg.name}: {highest_dmg.formatted_value}\n\n"
+        if highest_dmg.value > 0:
+            stat_text = f"{stat_text}{STAT_EMOJIS[highest_dmg.name]} {highest_dmg.name}: {highest_dmg.formatted_value}\n\n"
 
         stat_message = MessageComponent(content=stat_text)
 

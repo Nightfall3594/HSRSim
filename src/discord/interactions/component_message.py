@@ -41,19 +41,15 @@ class BuildMessage(ComponentMessage):
 
         divider = MessageComponent(content=f"~~~                                                                            ~~~")
 
-        stat_text = ""
+        stat_text = "\n\n".join(
+            f"{STAT_EMOJIS[stat.name]} {stat.name}: {stat.formatted_value}"
+            for stat in character.stats.values()
+            if stat.name not in DMG_BONUSES and stat.value > 0
+        )
 
-        # up to 11, since only the first 11 stats are non-dmg%.
-        # screw it. new solution, make a constants dict.
-        for i in range(11):
-            stat = list(character.stats.values())[i]
-            if stat.value != 0:
-                stat_text = f"{stat_text}{STAT_EMOJIS[stat.name]} {stat.name}: {stat.formatted_value}\n\n"
-
-        # then add the highest dmg%
         highest_dmg = character.highest_dmg_bonus_stat
         if highest_dmg.value > 0:
-            stat_text = f"{stat_text}{STAT_EMOJIS[highest_dmg.name]} {highest_dmg.name}: {highest_dmg.formatted_value}\n\n"
+            stat_text += f"\n\n{STAT_EMOJIS[highest_dmg.name]} {highest_dmg.name}: {highest_dmg.formatted_value}"
 
         stat_message = MessageComponent(content=stat_text)
 

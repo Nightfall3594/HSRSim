@@ -1,17 +1,19 @@
 import typing
 from typing import *
 
-import enka.errors
 from pydantic import BaseModel, Field
 from enka import HSRClient
-import httpx
+from enka.errors import *
 import os
+
+from pyexpat.errors import messages
 
 from src.discord.commands import Options
 from src.discord.components import DiscordContext
 from src.discord.components.message_components import StringSelectOption
 from src.discord.interactions.component_message import BuildMessage
 from src.discord.interactions.interaction_responses import CallBackResponse, FollowUpResponse
+from src.discord.interactions.discord_message import DiscordMessage
 
 T = typing.TypeVar('T')
 
@@ -86,10 +88,21 @@ class ShowBuild(SubCommand):
         async with HSRClient() as client:
             try:
                 response = await client.fetch_showcase(self.options[0].value)
-            except enka.errors.RateLimitedError:
-                return CallBackResponse.generic_message("Mmm, looks like you're hitting rate limits. How about you try again a few minutes from now?",
-                                                        ctx.interaction_id,
-                                                        ctx.interaction_token)
+            except RateLimitedError:
+                error_message = DiscordMessage.generic("Looks like you're hitting rate limits. How about you try again a few minutes from now?")
+            except GameMaintenanceError:
+                error_message = DiscordMessage.generic("Looks like the game is still on maintenance. Try again later on")
+            except WrongUIDFormatError:
+                error_message = DiscordMessage.generic("Invalid UID format, please use a valid one")
+            except PlayerDoesNotExistError:
+                error_message = DiscordMessage.generic("This player does not exist")
+            except EnkaAPIError:
+                error_message = DiscordMessage.generic("There is an error with enka.network")
+            except EnkaPyError:
+                error_message = DiscordMessage.generic("There is an error with the server.")
+
+        if error_message:
+            FollowUpResponse.send_followup(error_message, ctx.interaction_token)
 
         if not response.characters:
             return CallBackResponse.generic_message("No characters found. Are you sure they are public?",
